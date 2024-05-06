@@ -1,23 +1,38 @@
 
-import  { useState } from "react";
+import  { useContext, useState } from "react";
+import { CountContext } from "./Context";
 
 function App() {
+  
+  // eslint-disable-next-line no-unused-vars
   const [count , setCount] = useState(0);
+
+  //wrap anyone that wants to use the teleported value inside a provider
 return (
   <div>
-   <Count count = {count}/>
-   <Buttons count = {count} setCount={setCount}/>
+    <CountContext.Provider value = { count }>
+    <Count setCount={setCount}/>
+    </CountContext.Provider>
   </div>
 )
 }
 
-function Count({ count }){
+function Count({ setCount }){
 return <div>
-{count}
-</div>
+  <CountRenderer setCount = { setCount } />
+  <Buttons setCount = {setCount} />
+  </div>
 }
 
-function Buttons({count ,setCount}){
+function  CountRenderer(){
+  const count = useContext(CountContext);
+  return <div>
+    {count}
+  </div>
+}
+
+function Buttons({setCount}){
+  const count = useContext(CountContext);
 return <div>
   <button onClick={() => {
     setCount(count + 1);
